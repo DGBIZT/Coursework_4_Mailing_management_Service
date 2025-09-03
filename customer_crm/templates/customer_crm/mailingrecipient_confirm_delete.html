@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Удалить MailingRecipient</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends 'customer_crm/base.html' %}
+{% block title %}Удаление{% endblock %}
+{% block content %}
     <div class="container">
-        <h1 class="md-4">Удалить MailingRecipient </h1>
+        <h1 class="md-4">Удалить получателя </h1>
         <p>Вы уверены, что хотите удалить "{{mailingrecipient.email}} {{mailingrecipient.full_name}}"</p>
         <form method="post" >
             {% csrf_token %}
@@ -20,8 +12,4 @@
 
         </form>
     </div>
-
-
-<script type="text/javascript" src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
-</body>
-</html>
+{% endblock %}

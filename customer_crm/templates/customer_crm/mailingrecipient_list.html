@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cписок MailingRecipient</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends 'customer_crm/base.html' %}
+{% block title %}Получатели рассылок{% endblock %}
+{% block content %}
+
     <div class="container">
-        <h1 class="md-4">Список MailingRecipient </h1>
+        <h1 class="md-4">Список получателей рассылки </h1>
         <a href="{% url 'customercrm:mailingrecipient_create' %}" class="btn btn-primary">Создать нового клиента для рассылки </a>
         <ul class="list-group">
             {% for mailingrecipient in  mailingrecipients %}
@@ -24,7 +17,4 @@
         </ul>
     </div>
 
-
-<script type="text/javascript" src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
-</body>
-</html>
+{% endblock %}

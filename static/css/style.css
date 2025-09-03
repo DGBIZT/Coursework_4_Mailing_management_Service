@@ -1,0 +1,61 @@
+.sendflow-logo {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    color: white;
+    text-shadow:
+        0 0 5px rgba(0, 123, 255, 0.8),
+        0 0 10px rgba(0, 123, 255, 0.6);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.envelope {
+    width: 33px;
+    height: 33px;
+    fill: rgba(0, 123, 255, 0.9);
+    transform: translateY(-2px);
+}
+
+.envelope-body {
+    stroke: dodgerblue; /* Цвет обводки */
+    stroke-width: 1.5; /* Толщина обводки */
+}
+
+.envelope-arrow {
+    fill: rgba(30,144,255,1);
+}
+
+.hederlink {
+    text-decoration: none;
+    color: #007bff;
+    padding: 5px 10px;
+    transition: box-shadow 0.3s;
+    font-weight: 500; /* Жирный текст */
+    font-size: 1.2rem; /* Опционально: можно увеличить размер текста */
+}
+
+.hederlink:hover {
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.9);
+}
+
+.hederlink:active {
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.9);
+    transform: translateY(2px);
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.navbar-links {
+    gap: 1rem; /* Расстояние между ссылками */
+}
+
+
+
+
+
+

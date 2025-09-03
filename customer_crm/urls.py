@@ -9,6 +9,4 @@ urlpatterns = [
     path('mailingrecipient/detail/<int:pk>/', views.MailingRecipientDetailView.as_view(), name='mailingrecipient_detail'),
     path('mailingrecipient/update/<int:pk>/', views.MailingRecipientUpdateView.as_view(), name='mailingrecipient_update'),
     path('mailingrecipient/delete/<int:pk>/', views.MailingRecipientDeleteView.as_view(), name='mailingrecipient_delete'),
-
-
 ]

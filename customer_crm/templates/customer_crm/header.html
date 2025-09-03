@@ -1,0 +1,24 @@
+<header class="border-bottom">
+    {% load static %}
+    <nav class="navbar" style="background-color: #e3f2fd;" data-bs-theme="light">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="sendflow-logo">
+                    <svg class="envelope" width="30" height="30" viewBox="0 0 24 24">
+                        <path class="envelope-body" fill="currentColor" stroke="black" stroke-width="1.5" d="M20 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 2H4V8h16v6z"/>
+                        <path class="envelope-arrow" fill="currentColor" d="M12 14l-4-4 4-4 4 4-4 4z"/>
+                    </svg>
+                    SendWave
+                </div>
+
+                <div class="navbar-links d-flex gap-2">
+                    <a class="hederlink" href="#">Главная</a>
+                    <a class="hederlink" href="#">Рассылки</a>
+                    <a class="hederlink" href="{% url 'customercrm:mailingrecipient_list' %}">Получатели</a>
+                    <a class="hederlink" href="#">Шаблон(Сообщения)</a>
+                    <a class="hederlink" href="#">Попытки рассылок</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

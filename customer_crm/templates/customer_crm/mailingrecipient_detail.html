@@ -1,21 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма MailingRecipient</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends 'customer_crm/base.html' %}
+{% block title %}Детали клиента{% endblock %}
+{% block content %}
     <div class="container">
         <h1 class="md-4">{{ mailingrecipient.full_name }}</h1>
         <p>{{ mailingrecipient.email }}</p>
         <p>{{ mailingrecipient.comment }}</p>
     </div>
 
-
-<script type="text/javascript" src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
-</body>
-</html>
+{% endblock %}
