@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cписок MailingRecipient</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="md-4">Список MailingRecipient </h1>
+        <a href="{% url 'customercrm:mailingrecipient_create' %}" class="btn btn-primary">Создать нового клиента для рассылки </a>
+        <ul class="list-group">
+            {% for mailingrecipient in  mailingrecipients %}
+            <li class="list-group-item">
+                <a href="{% url 'customercrm:mailingrecipient_detail' mailingrecipient.pk %}">{{ mailingrecipient.email }} {{ mailingrecipient.full_name}}</a>
+                <a href="{% url 'customercrm:mailingrecipient_update' mailingrecipient.pk %}" class="btn btn-secondary">Редактировать</a>
+                <a href="{% url 'customercrm:mailingrecipient_delete' mailingrecipient.pk %}" class="btn btn-danger">Удалить</a>
+            </li>
+
+            {% endfor %}
+        </ul>
+    </div>
+
+
+<script type="text/javascript" src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

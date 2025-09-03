@@ -10,6 +10,7 @@ class Command(BaseCommand):
             {"email": "boris@sky.pro", "full_name": "Борис Петров", "comment": "Получатель Борис"},
             {"email": "sveta@sky.pro", "full_name": "Света Новикова", "comment": "Получатель Света"},
             {"email": "ekaterina@sky.pro", "full_name": "Екатерина Сидорова", "comment": "Получатель Екатерина"},
+            {"email":"georgiy.gorlov@gmail.com", "full_name":"Горлов Георгий Александрович", "comment": "Реальный получатель"}
         ]
 
         created_count = 0
