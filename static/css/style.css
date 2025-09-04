@@ -56,6 +56,22 @@
 
 
 
+.list-group-item {
+    cursor: pointer;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.list-group-item {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
 
 
 

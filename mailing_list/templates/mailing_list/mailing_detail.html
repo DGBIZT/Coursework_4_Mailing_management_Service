@@ -1,0 +1,31 @@
+{% extends 'customer_crm/base.html' %}
+{% block title %}Рассылка №{{ mailing_list.id }}{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1>Рассылка №{{ mailing_list.id }}</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ mailing_list.message.subject }}</h5>
+            <p class="card-text">
+                Статус: {{ mailing_list.get_status_display }}<br>
+                Дата начала: {{mailing_list.start_datetime}}<br>
+                Дата окончания: {{mailing_list.end_datetime}}
+            </p>
+        </div>
+    </div>
+
+    <h2>Получатели ({{ mailing_list.recipients.count }})</h2>
+    <ul class="list-group">
+        {% for recipient in mailing_list.recipients.all %}
+        <li class="list-group-item">
+            {{ recipient.full_name }} ({{ recipient.email }})
+        </li>
+        {% empty %}
+        <li class="list-group-item">Получатели не назначены</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

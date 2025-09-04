@@ -23,7 +23,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('customer_crm/', include('customer_crm.urls', namespace='customercrm')),
-    path('messages_mgmt/', include('messages_mgmt.urls', namespace='messagesmgmt'))
+    path('messages_mgmt/', include('messages_mgmt.urls', namespace='messagesmgmt')),
+    path('mailing_list/', include('mailing_list.urls', namespace='mailinglist')),
 
 ]
 if settings.DEBUG: # Обработка media

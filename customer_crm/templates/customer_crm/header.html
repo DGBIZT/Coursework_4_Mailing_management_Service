@@ -13,9 +13,9 @@
 
                 <div class="navbar-links d-flex gap-2">
                     <a class="hederlink" href="#">Главная</a>
-                    <a class="hederlink" href="#">Рассылки</a>
+                    <a class="hederlink" href="{% url 'mailinglist:mailing_list' %}">Рассылки</a>
                     <a class="hederlink" href="{% url 'customercrm:mailingrecipient_list' %}">Получатели</a>
-                    <a class="hederlink" href="#">Шаблон(Сообщения)</a>
+                    <a class="hederlink" href="{% url 'messagesmgmt:messagemgmt_list' %}">Шаблон(Сообщения)</a>
                     <a class="hederlink" href="#">Попытки рассылок</a>
                 </div>
             </div>

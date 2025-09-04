@@ -13,9 +13,9 @@
                 <h5>Категории</h5>
                 <ul class="list-unstyled text-small">
                     <li><a class="hederlink" href="#">Главная</a></li>
-                    <li><a class="hederlink" href="#">Рассылки</a></li>
+                    <li><a class="hederlink" href="{% url 'mailinglist:mailing_list' %}">Рассылки</a></li>
                     <li><a class="hederlink" href="{% url 'customercrm:mailingrecipient_list' %}">Получатели</a></li>
-                    <li><a class="hederlink" href="#">Шаблон(Сообщения)</a></li>
+                    <li><a class="hederlink" href="{% url 'messagesmgmt:messagemgmt_list' %}">Шаблон(Сообщения)</a></li>
                     <li><a class="hederlink" href="#">Попытки рассылок</a></li>
                 </ul>
             </div>
