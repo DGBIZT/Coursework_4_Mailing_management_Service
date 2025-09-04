@@ -4,11 +4,13 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from customer_crm.models import MailingRecipient
+from .forms import MailingRecipientFrom
+
 
 
 class MailingRecipientCreateView(CreateView):
     model = MailingRecipient
-    fields = ['email', 'full_name', 'comment']
+    form_class = MailingRecipientFrom
     template_name = 'customer_crm/mailingrecipient_form.html'
     success_url = reverse_lazy('customercrm:mailingrecipient_list')
 
@@ -24,7 +26,7 @@ class MailingRecipientDetailView(DetailView):
 
 class MailingRecipientUpdateView(UpdateView):
     model = MailingRecipient
-    fields = ['email', 'full_name', 'comment']
+    form_class = MailingRecipientFrom
     template_name = 'customer_crm/mailingrecipient_form.html'
     success_url = reverse_lazy('customercrm:mailingrecipient_list')
 
