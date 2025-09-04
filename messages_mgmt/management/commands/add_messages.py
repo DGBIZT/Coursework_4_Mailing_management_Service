@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from message_management.models import MessageManagement
+from messages_mgmt.models import MessageManagement
 
 class Command(BaseCommand):
     help("Добавление сообщений через командную строку. Пример: python manage.py add_massages")
