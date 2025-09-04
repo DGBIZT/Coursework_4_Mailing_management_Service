@@ -43,6 +43,14 @@ class MailingRecipientFrom(forms.ModelForm):
             'placeholder': 'Введите комментарий'
         })
 
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        full_name = cleaned_data.get('full_name')
+
+        if email and full_name and email.lower() == full_name.lower():
+            self.add_error('email', 'Email и Ф.И.О. не могут быть одинаковыми')
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         validate_forbidden_words(email)
