@@ -3,29 +3,67 @@
 {% block content %}
 
 <div class="container">
-    <h1>Рассылка №{{ mailing_list.id }}</h1>
-
-    <div class="card mb-3">
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-light">
+            <h1 class="h3 mb-0">Рассылка №{{ mailing_list.id }}</h1>
+        </div>
         <div class="card-body">
-            <h5 class="card-title">{{ mailing_list.message.subject }}</h5>
-            <p class="card-text">
-                Статус: {{ mailing_list.get_status_display }}<br>
-                Дата начала: {{mailing_list.start_datetime}}<br>
-                Дата окончания: {{mailing_list.end_datetime}}
-            </p>
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 class="card-title">{{ mailing_list.message.subject }}</h5>
+                    <p class="card-text">
+                        <strong>Статус:</strong> {{ mailing_list.get_status_display }}<br>
+                        <strong>Дата начала:</strong> {{ mailing_list.start_datetime|date:"d.m.Y H:i" }}<br>
+                        <strong>Дата окончания:</strong> {{ mailing_list.end_datetime|date:"d.m.Y H:i" }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'mailinglist:mailing_update' mailing_list.pk %}" class="btn btn-primary me-2">Редактировать</a>
+                    <a href="{% url 'mailinglist:mailing_delete' mailing_list.pk %}" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h2>Получатели ({{ mailing_list.recipients.count }})</h2>
-    <ul class="list-group">
-        {% for recipient in mailing_list.recipients.all %}
-        <li class="list-group-item">
-            {{ recipient.full_name }} ({{ recipient.email }})
-        </li>
-        {% empty %}
-        <li class="list-group-item">Получатели не назначены</li>
-        {% endfor %}
-    </ul>
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Получатели ({{ mailing_list.recipients.count }})</h2>
+            <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#recipientsList">
+                Свернуть/Развернуть
+            </a>
+        </div>
+        <div class="collapse show" id="recipientsList">
+            <div class="card-body">
+                {% if mailing_list.recipients.exists %}
+                    <ul class="list-group list-group-flush">
+                        {% for recipient in mailing_list.recipients.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    {{ recipient.full_name }} ({{ recipient.email }})
+                                </div>
+                                <div class="text-end">
+                                    <!-- Здесь можно добавить кнопки действий с получателем -->
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">Получатели не назначены</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-light">
+            <h2 class="mb-0">Содержание сообщения</h2>
+        </div>
+        <div class="card-body">
+            {{ mailing_list.message }}
+        </div>
+    </div>
+
+    <a href="{% url 'mailinglist:mailing_list' %}" class="btn btn-secondary">Назад к списку рассылок</a>
 </div>
 
 {% endblock %}

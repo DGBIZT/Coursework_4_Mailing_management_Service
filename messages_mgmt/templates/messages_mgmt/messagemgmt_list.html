@@ -1,20 +1,93 @@
 {% extends 'customer_crm/base.html' %}
-{% block title %}Получатели рассылок{% endblock %}
+{% block title %}Список сообщений{% endblock %}
 {% block content %}
 
-    <div class="container">
-        <h1 class="md-4">Список сообщений </h1>
-        <a href="{% url 'messagesmgmt:messagemanagement_create' %}" class="btn btn-primary">Создать новое сообщение для рассылки </a>
-        <ul class="list-group">
-            {% for messagemanagement in  messagemanagements %}
-            <li class="list-group-item">
-                <a href="{% url 'messagesmgmt:messagemanagement_detail' messagemanagement.pk %}">{{ messagemanagement.message_subject }}</a>
-                <a href="{% url 'messagesmgmt:messagemanagement_update' messagemanagement.pk %}" class="btn btn-secondary">Редактировать</a>
-                <a href="{% url 'messagesmgmt:messagemanagement_delete' messagemanagement.pk %}" class="btn btn-danger">Удалить</a>
-            </li>
+<div class="container">
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">Список сообщений</h1>
+            <a href="{% url 'messagesmgmt:messagemanagement_create' %}" class="btn btn-primary">Создать новое сообщение</a>
+        </div>
 
-            {% endfor %}
-        </ul>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Тема сообщения</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messagemanagements %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'messagesmgmt:messagemanagement_detail' message.pk %}">
+                                    {{ message.message_subject }}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'messagesmgmt:messagemanagement_update' message.pk %}" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <a href="{% url 'messagesmgmt:messagemanagement_delete' message.pk %}" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center">Сообщения не найдены</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <!-- Пагинация -->
+    {% if is_paginated %}
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for page in paginator.page_range %}
+            <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
 
 {% endblock %}

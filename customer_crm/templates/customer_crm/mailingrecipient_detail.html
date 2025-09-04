@@ -1,10 +1,46 @@
 {% extends 'customer_crm/base.html' %}
-{% block title %}Детали клиента{% endblock %}
+{% block title %}Детали клиента - {{ mailingrecipient.full_name }}{% endblock %}
 {% block content %}
-    <div class="container">
-        <h1 class="md-4">{{ mailingrecipient.full_name }}</h1>
-        <p>{{ mailingrecipient.email }}</p>
-        <p>{{ mailingrecipient.comment }}</p>
+
+<div class="container">
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">{{ mailingrecipient.full_name }}</h1>
+            <div class="btn-group">
+                <a href="{% url 'customercrm:mailingrecipient_update' mailingrecipient.pk %}" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-pen"></i> Редактировать
+                </a>
+                <a href="{% url 'customercrm:mailingrecipient_delete' mailingrecipient.pk %}" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash"></i> Удалить
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <strong>Email:</strong> {{ mailingrecipient.email }}
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Комментарий:</strong>
+                        <p>{{ mailingrecipient.comment|linebreaks }}</p>
+                    </div>
+                </div>
+
+                <!-- Здесь можно добавить дополнительную информацию о клиенте -->
+                <!-- Например: телефон, адрес, дата регистрации и т.д. -->
+            </div>
+
+            <div class="text-end">
+                <a href="{% url 'customercrm:mailingrecipient_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Назад к списку
+                </a>
+            </div>
+        </div>
     </div>
+</div>
 
 {% endblock %}
+

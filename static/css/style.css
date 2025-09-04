@@ -73,5 +73,87 @@
 }
 
 
+/* Общие стили для карточек */
+.card {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Стили для заголовков карточек */
+.card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: none;
+    background-color: #f8f9fa;
+}
+
+/* Стили для тела карточек */
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Стили для списка получателей */
+.list-group-item {
+    border-radius: 0;
+    border-bottom: 1px solid #dee2e6;
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Стили для кнопок */
+.btn {
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+/* Стили для даты и времени */
+.date-time {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Дополнительные стили для мобильного вида */
+@media (max-width: 767.98px) {
+    .card-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .card-header h2 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Стили для контента сообщения */
+.card-body p {
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+/* Стили для кнопок управления */
+.card-body .btn {
+    margin-top: 1rem;
+}
+
+/* Стили для пустых состояний */
+.text-center {
+    padding: 2rem;
+}
+
 
 
