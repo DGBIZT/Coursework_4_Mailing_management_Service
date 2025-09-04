@@ -1,0 +1,10 @@
+{% extends 'customer_crm/base.html' %}
+{% block title %}Детали сообщения{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1 class="md-4"> Тема: {{messagemanagement.message_subject}}</h1>
+        <p>{{ messagemanagement.message_subject }}</p>
+        <p>{{ messagemanagement.body }}</p>
+    </div>
+
+{% endblock %}

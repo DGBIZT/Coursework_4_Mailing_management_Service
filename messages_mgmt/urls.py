@@ -5,10 +5,9 @@ app_name = 'messages_mgmt'
 
 urlpatterns = [
     path('messagemanagement/create/', views.MessageManagementCreateView.as_view(), name='messagemanagement_create'),
-    path('messagemanagement/list/', views.MessageManagementListView.as_view(), name='messagemanagement_list'),
+    path('messagemanagement/list/', views.MessageManagementListView.as_view(), name='messagemgmt_list'),
+    path('messagemanagement/detail/<int:pk>/', views.MessageManagementDetailView.as_view(), name='messagemanagement_detail'),
+    path('messagemanagement/update/<int:pk>/', views.MessageManagementUpdateView.as_view(), name='messagemanagement_update'),
+    path('messagemanagement/delete/<int:pk>/', views.MessageManagementDeleteView.as_view(), name='messagemanagement_delete'),
 
-
-    path('mailingrecipient/detail/<int:pk>/', views.MailingRecipientDetailView.as_view(), name='mailingrecipient_detail'),
-    path('mailingrecipient/update/<int:pk>/', views.MailingRecipientUpdateView.as_view(), name='mailingrecipient_update'),
-    path('mailingrecipient/delete/<int:pk>/', views.MailingRecipientDeleteView.as_view(), name='mailingrecipient_delete'),
 ]

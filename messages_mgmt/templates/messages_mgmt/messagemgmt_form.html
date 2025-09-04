@@ -1,0 +1,22 @@
+{% extends 'customer_crm/base.html' %}
+{% block title %}Форма для сообщений{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <h1 class="md-4">
+         {% if object %}
+            Редактирование сообщения {{ object.message_subject }}
+        {% else %}
+            Добавление нового сообшения.
+        {% endif %}
+        </h1>
+        <form method="post" >
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{% url 'messagesmgmt:messagemgmt_list' %}" class="btn btn-secondary">Отмена</a>
+
+        </form>
+    </div>
+{% endblock %}
