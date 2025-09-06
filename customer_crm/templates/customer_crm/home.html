@@ -1,0 +1,74 @@
+{% extends 'customer_crm/base.html' %}
+{% block title %}Главная страница{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 class="mb-4">Статистика рассылок</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Всего рассылок</h5>
+                    <h1 class="display-4">{{ total_mailings }}</h1>
+                    <p class="card-text">Общее количество созданных рассылок</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Активных рассылок</h5>
+                    <h1 class="display-4">{{ active_mailings }}</h1>
+                    <p class="card-text">Рассылки в статусе "Запущена"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Уникальных получателей</h5>
+                    <h1 class="display-4">{{ unique_recipients }}</h1>
+                    <p class="card-text">Общее количество уникальных получателей</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            Последние созданные рассылки
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for mailing in recent_mailings %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">
+                            <a href="{% url 'mailinglist:mailing_detail' mailing.pk %}">
+                                {{ mailing.message.message_subject }}
+                            </a>
+                        </h6>
+                        <p class="mb-0">{{ mailing.get_status_display }}</p>
+                    </div>
+                    <div>
+                        <span class="badge bg-primary rounded-pill">{{ mailing.recipients.count }}</span>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="list-group-item">Рассылок пока нет</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'mailinglist:mailing_list' %}" class="btn btn-primary">
+            Перейти к списку всех рассылок
+        </a>
+    </div>
+</div>
+
+{% endblock %}

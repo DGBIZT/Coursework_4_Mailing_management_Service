@@ -22,6 +22,26 @@
                         </div>
                         <p class="mb-1">Статус: {{ mailing.get_status_display }}</p>
                         <p class="mb-0">Дата создания: {{ mailing.start_datetime }}</p>
+                        <form method="post" action="{% url 'mailinglist:mailing_send' mailing.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-info mb-1" type="submit">Отправить рассылку</button>
+                        </form>
+                        {% if mailing.status == mailing.STARTED %}
+                            <form method="post" action="{% url 'mailinglist:mailing_complete' mailing.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success mb-1">Завершить рассылку</button>
+                            </form>
+                        {% endif %}
+
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                            <div class="message {{ message.tags }}">
+                            {{ message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div>
                         <button type="button" class="btn btn-sm btn-outline-primary"

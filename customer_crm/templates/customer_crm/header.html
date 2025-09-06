@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="navbar-links d-flex gap-2">
-                    <a class="hederlink" href="#">Главная</a>
+                    <a class="hederlink" href="{% url 'customercrm:home' %}">Главная</a>
                     <a class="hederlink" href="{% url 'mailinglist:mailing_list' %}">Рассылки</a>
                     <a class="hederlink" href="{% url 'customercrm:mailingrecipient_list' %}">Получатели</a>
                     <a class="hederlink" href="{% url 'messagesmgmt:messagemgmt_list' %}">Шаблон(Сообщения)</a>

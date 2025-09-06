@@ -18,8 +18,15 @@
                     </p>
                 </div>
                 <div class="col-md-4 text-end">
+
                     <a href="{% url 'mailinglist:mailing_update' mailing_list.pk %}" class="btn btn-primary me-2">Редактировать</a>
                     <a href="{% url 'mailinglist:mailing_delete' mailing_list.pk %}" class="btn btn-danger">Удалить</a>
+                    {% if mailing_list.status == 'Started' %}
+                    <form method="post" action="{% url 'mailinglist:mailing_complete' mailing_list.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success mb-3">Завершить рассылку</button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
         </div>
