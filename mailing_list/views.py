@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from .forms import CompleteMailingForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class MailingList(ListView):
@@ -23,7 +24,7 @@ class MailingList(ListView):
         context['mailings_list'] = Mailing.objects.all()  # Явное указание queryset
         return context
 
-class MailingCreate(CreateView):
+class MailingCreate(LoginRequiredMixin, CreateView):
     model = Mailing
     fields = ["message", "recipients",]
     template_name = 'mailing_list/mailing_form.html'
@@ -39,18 +40,18 @@ class MailingDetail(DetailView):
         context['attempts'] = AttemptMailing.objects.filter(mailing=self.object)
         return context
 
-class MailingUpdate(UpdateView):
+class MailingUpdate(LoginRequiredMixin, UpdateView):
     model = Mailing
     fields = ["status", "message", "message", "recipients",]
     template_name = 'mailing_list/mailing_form.html'
     success_url = reverse_lazy('mailinglist:mailing_list')
 
-class MailingDelete(DeleteView):
+class MailingDelete(LoginRequiredMixin, DeleteView):
     model = Mailing
     template_name = 'mailing_list/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailinglist:mailing_list')
 
-class MailingSend(SingleObjectMixin, View):
+class MailingSend(LoginRequiredMixin, SingleObjectMixin, View):
     model = Mailing
 
     def post(self, request, *args, **kwargs):
@@ -115,7 +116,7 @@ class MailingSend(SingleObjectMixin, View):
             return HttpResponseRedirect(reverse_lazy('mailing_list:mailing_detail', kwargs={'pk': mailing.pk}))
 
 
-class CompleteMailing(View):
+class CompleteMailing(LoginRequiredMixin, View):
     def post(self, request, pk):
         mailing = Mailing.objects.get(pk=pk)
 

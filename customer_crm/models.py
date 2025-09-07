@@ -23,6 +23,7 @@ class MailingRecipient(models.Model):
         verbose_name_plural = "Получатели рассылок"
         ordering = ['email']
 
+
     def __str__(self):
         return self.full_name
 

@@ -7,32 +7,33 @@ from customer_crm.models import MailingRecipient
 from mailing_list.models import  Mailing
 from .forms import MailingRecipientFrom
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
-class MailingRecipientCreateView(CreateView):
+class MailingRecipientCreateView(LoginRequiredMixin, CreateView):
     model = MailingRecipient
     form_class = MailingRecipientFrom
     template_name = 'customer_crm/mailingrecipient_form.html'
     success_url = reverse_lazy('customercrm:mailingrecipient_list')
 
-class MailingRecipientListView(ListView):
+class MailingRecipientListView(LoginRequiredMixin, ListView):
     model = MailingRecipient
     template_name = 'customer_crm/mailingrecipient_list.html'
     context_object_name = 'mailingrecipients'
 
-class MailingRecipientDetailView(DetailView):
+class MailingRecipientDetailView(LoginRequiredMixin,DetailView):
     model = MailingRecipient
     template_name = 'customer_crm/mailingrecipient_detail.html'
     context_object_name = 'mailingrecipient'
 
-class MailingRecipientUpdateView(UpdateView):
+class MailingRecipientUpdateView(LoginRequiredMixin, UpdateView):
     model = MailingRecipient
     form_class = MailingRecipientFrom
     template_name = 'customer_crm/mailingrecipient_form.html'
     success_url = reverse_lazy('customercrm:mailingrecipient_list')
 
-class MailingRecipientDeleteView(DeleteView):
+class MailingRecipientDeleteView(LoginRequiredMixin, DeleteView):
     model = MailingRecipient
     template_name = 'customer_crm/mailingrecipient_confirm_delete.html'
     success_url = reverse_lazy('customercrm:mailingrecipient_list')

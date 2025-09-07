@@ -4,7 +4,7 @@ from . import views
 app_name = 'customer_crm'
 
 urlpatterns = [
-    path('', views.HomeView.as_view(), name='home'),
+    path('home/', views.HomeView.as_view(), name='home'),
     path('mailingrecipient/create/', views.MailingRecipientCreateView.as_view(), name='mailingrecipient_create'),
     path('mailingrecipient/list/', views.MailingRecipientListView.as_view(), name='mailingrecipient_list'),
     path('mailingrecipient/detail/<int:pk>/', views.MailingRecipientDetailView.as_view(), name='mailingrecipient_detail'),
