@@ -1,12 +1,10 @@
 {% extends 'customer_crm/base.html' %}
-{% block title %}Список сообщений{% endblock %}
 {% block content %}
-
-  <h2>Вход</h2>
-  <form method="post">
+<h2>Вход в систему</h2>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Войти</button>
-  </form>
-
+    <button type="submit">Войти</button>
+</form>
+<p><a href="{% url 'users:password_reset' %}">Забыли пароль?</a></p>
 {% endblock %}

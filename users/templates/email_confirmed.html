@@ -1,0 +1,8 @@
+{% extends 'customer_crm/base.html' %}
+{% block title %}Список сообщений{% endblock %}
+{% block content %}
+
+<h1>{{ message }}</h1>
+<a href="{% url 'customercrm:home' %}">Вернуться на главную</a>
+
+{% endblock %}
