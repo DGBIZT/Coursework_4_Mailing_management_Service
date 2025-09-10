@@ -65,19 +65,19 @@ class AttemptMailing(models.Model):
     )
 
     # Статус
-    SUCCESSFULLY = 'Successfully'
-    NOT_SUCCESSFUL= 'Not successful'
+    SUCCESS = 'success'
+    FAILURE = 'failure'
 
     STATUS_CHOICES = (
-        (SUCCESSFULLY, 'Успешно'),
-        (NOT_SUCCESSFUL, 'Не успешно'),
+        (SUCCESS, 'Успешно'),
+        (FAILURE, 'Не успешно'),
     )
 
     status = models.CharField(  # Добавленное поле статуса
         verbose_name="Статус отправки",
         max_length=20,
         choices=STATUS_CHOICES,
-        default=SUCCESSFULLY
+        default=SUCCESS
     )
 
     mail_server_response = models.TextField(
@@ -92,6 +92,31 @@ class AttemptMailing(models.Model):
         on_delete=models.CASCADE,
         related_name='attempts'
     )
+
+    def get_success_rate(self):
+        """Процент успешных попыток"""
+        total = AttemptMailing.objects.filter(mailing=self.mailing).count()
+        success = AttemptMailing.objects.filter(
+            mailing=self.mailing,
+            status=self.SUCCESS
+        ).count()
+        return (success / total * 100) if total > 0 else 0
+
+    @classmethod
+    def get_user_stats(cls, user):
+        # Получаем все сообщения пользователя
+        user_messages = MessageManagement.objects.filter(user=user)
+
+        # Получаем все рассылки через связанные сообщения
+        mailings = Mailing.objects.filter(message__in=user_messages)
+
+        attempts = cls.objects.filter(mailing__in=mailings)
+
+        return {
+            'total_attempts': attempts.count(),
+            'success_attempts': attempts.filter(status=cls.SUCCESS).count(),
+            'failed_attempts': attempts.filter(status=cls.FAILURE).count(),
+        }
 
     class Meta:
         verbose_name = "Попытка рассылки"

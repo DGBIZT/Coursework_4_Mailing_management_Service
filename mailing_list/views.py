@@ -12,7 +12,14 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from .forms import CompleteMailingForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
+from django.utils import timezone
+from django.contrib.auth.models import User
+from messages_mgmt.models import MessageManagement
+from django.contrib.auth import get_user_model
 
+
+User = get_user_model()
 
 class MailingList(ListView):
     model = Mailing
@@ -132,3 +139,53 @@ class CompleteMailing(LoginRequiredMixin, View):
         messages.success(request, 'Рассылка успешно завершена')
         return HttpResponseRedirect(reverse_lazy('mailing_list:mailing_detail', kwargs={'pk': pk}))
 
+
+class StatsView(View):
+    def get(self, request):
+        user = request.user
+
+        # Получаем все сообщения пользователя
+        user_messages = MessageManagement.objects.filter(user=user)
+
+        # Получаем все рассылки через связанные сообщения
+        mailings = Mailing.objects.filter(message__in=user_messages)
+
+        # Проверяем, есть ли рассылки у пользователя
+        if not mailings.exists():
+            return render(request, 'mailing_list/stats.html', {'no_data': True})
+
+        # Подсчет статистики
+        stats = {
+            'total_attempts': AttemptMailing.objects.filter(
+                mailing__in=mailings
+            ).count(),
+
+            'success_attempts': AttemptMailing.objects.filter(
+                mailing__in=mailings,
+                status=AttemptMailing.SUCCESS
+            ).count(),
+
+            'failed_attempts': AttemptMailing.objects.filter(
+                mailing__in=mailings,
+                status=AttemptMailing.FAILURE
+            ).count(),
+        }
+
+        # Получаем последние попытки
+        recent_attempts = AttemptMailing.objects.filter(
+            mailing__in=mailings
+        ).order_by('-time_attempt')[:10]
+
+        return render(
+            request,
+            'mailing_list/stats.html',
+            {
+                'stats': stats,
+                'recent_attempts': recent_attempts,
+                'success_rate': (
+                    stats['success_attempts'] /
+                    stats['total_attempts'] * 100
+                    if stats['total_attempts'] > 0 else 0
+                )
+            }
+        )

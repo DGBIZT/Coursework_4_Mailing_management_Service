@@ -5,6 +5,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from messages_mgmt.models import MessageManagement
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 
 class MessageManagementCreateView(LoginRequiredMixin, CreateView):
@@ -12,6 +15,15 @@ class MessageManagementCreateView(LoginRequiredMixin, CreateView):
     fields = ["message_subject", "body",]
     template_name = 'messages_mgmt/messagemgmt_form.html'
     success_url = reverse_lazy('messagesmgmt:messagemgmt_list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        # Автоматически назначаем текущего пользователя
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 class MessageManagementListView(ListView):
     model = MessageManagement
