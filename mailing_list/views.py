@@ -95,7 +95,7 @@ class MailingSend(LoginRequiredMixin, SingleObjectMixin, View):
             # Создаем попытку отправки
             attempt = AttemptMailing.objects.create(
                 mailing=mailing,
-                status=AttemptMailing.SUCCESSFULLY
+                status=AttemptMailing.SUCCESS
             )
             # Сохраняем реальный ответ сервера
 
@@ -115,7 +115,7 @@ class MailingSend(LoginRequiredMixin, SingleObjectMixin, View):
             # Создаем запись об ошибке
             attempt = AttemptMailing.objects.create(
                 mailing=mailing,
-                status=AttemptMailing.NOT_SUCCESSFUL
+                status=AttemptMailing.FAILURE
             )
             attempt.mail_server_response = str(e)
             attempt.save()
@@ -186,6 +186,7 @@ class StatsView(View):
                     stats['success_attempts'] /
                     stats['total_attempts'] * 100
                     if stats['total_attempts'] > 0 else 0
-                )
+                ),
+                'AttemptMailing': AttemptMailing
             }
         )

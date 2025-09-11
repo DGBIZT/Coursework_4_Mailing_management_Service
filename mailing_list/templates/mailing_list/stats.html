@@ -63,7 +63,7 @@
                                         <tr>
                                             <td>{{ attempt.time_attempt }}</td>
                                             <td>
-                                                {% if attempt.status == AttemptMailing.SUCCESSFULLY %}
+                                                {% if attempt.status == AttemptMailing.SUCCESS %}
                                                     <span class="text-success">Успешно</span>
                                                 {% elif attempt.status == AttemptMailing.FAILURE %}
                                                     <span class="text-danger">Ошибка</span>
