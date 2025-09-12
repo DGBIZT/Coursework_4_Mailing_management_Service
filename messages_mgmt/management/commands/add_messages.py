@@ -1,10 +1,23 @@
 from django.core.management.base import BaseCommand
 from messages_mgmt.models import MessageManagement
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Command(BaseCommand):
-    help("Добавление сообщений через командную строку. Пример: python manage.py add_massages")
+    help= "Добавление сообщений через командную строку. Пример: python manage.py add_messages"
 
     def handle(self, *args, **options):
+
+
+        # Находим пользователя, например, первого суперпользователя
+        user = User.objects.filter(is_superuser=True).first()
+        if not user:
+            self.stdout.write(
+                self.style.ERROR(
+                     "Не найдено ни одного суперпользователя. Сначала создайте его через createsuperuser.")
+            )
+            return
 
         message_data = [
             {"message_subject": "ТВ под любой сценарий жизни", "body": "Готовьте, играйте или устраивайте киновечера — телевизоры "
@@ -23,7 +36,8 @@ class Command(BaseCommand):
             message, created = MessageManagement.objects.get_or_create(
                 message_subject=data["message_subject"], # Уникальный ключ — message_subject
                 defaults={# Эти поля будут использованы ТОЛЬКО при создании
-                    "body": data["body"]
+                    "body": data["body"],
+                    "user": user,
                 }
             )
 
