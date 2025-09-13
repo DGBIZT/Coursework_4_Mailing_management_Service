@@ -4,6 +4,7 @@ from django.utils import timezone
 from messages_mgmt.models import MessageManagement
 from customer_crm.models import MailingRecipient
 from datetime import timedelta
+from users.models import CustomUser
 
 class Mailing(models.Model):
 
@@ -50,6 +51,14 @@ class Mailing(models.Model):
         related_name='recipient_mailings',
     )
 
+    user = models.ForeignKey(
+        CustomUser,  # или get_user_model()
+        verbose_name='Пользователь',
+        on_delete=models.CASCADE,
+        related_name='created_mailings'
+    )
+
+
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
@@ -93,6 +102,12 @@ class AttemptMailing(models.Model):
         related_name='attempts'
     )
 
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='mailings'
+    )
+
     def get_success_rate(self):
         """Процент успешных попыток"""
         total = AttemptMailing.objects.filter(mailing=self.mailing).count()
@@ -122,6 +137,9 @@ class AttemptMailing(models.Model):
         verbose_name = "Попытка рассылки"
         verbose_name_plural = "Попытки рассылки"
         ordering = ['-time_attempt']
+        permissions = [
+            ('view_mailing_stats', 'view mailing stats'),
+        ]
 
     def __str__(self):
         return f"Попытка {self.get_status_display()} от {self.time_attempt}"

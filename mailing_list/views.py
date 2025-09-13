@@ -17,69 +17,118 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from messages_mgmt.models import MessageManagement
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import permission_required
+from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404, redirect
 
 
 User = get_user_model()
 
-class MailingList(ListView):
+class BaseMailingView(LoginRequiredMixin):
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+
+class MailingList(BaseMailingView, ListView):
     model = Mailing
     template_name = 'mailing_list/mailing_list.html'
     context_object_name = 'mailings_list'
 
+    def get_queryset(self):
+        return Mailing.objects.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['mailings_list'] = Mailing.objects.all()  # Явное указание queryset
+        # context['mailings_list'] = Mailing.objects.all()  # Явное указание queryset
         return context
 
-class MailingCreate(LoginRequiredMixin, CreateView):
+class MailingCreate(BaseMailingView, CreateView):
     model = Mailing
-    fields = ["message", "recipients",]
+    form_class = CompleteMailingForm
     template_name = 'mailing_list/mailing_form.html'
     success_url = reverse_lazy('mailinglist:mailing_list')
 
-class MailingDetail(DetailView):
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Передаем пользователя в форму
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user  # Привязываем рассылку к пользователю
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_messages'] = MessageManagement.objects.filter(user=self.request.user)
+        return context
+
+class MailingDetail(BaseMailingView, DetailView):
     model = Mailing
     template_name = 'mailing_list/mailing_detail.html'
     context_object_name = 'mailing_list'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['attempts'] = AttemptMailing.objects.filter(mailing=self.object)
+        context['attempts'] = AttemptMailing.objects.filter(
+            mailing=self.object,
+            mailing__user=self.request.user
+        )
         return context
 
-class MailingUpdate(LoginRequiredMixin, UpdateView):
+class MailingUpdate(BaseMailingView, UpdateView):
     model = Mailing
-    fields = ["status", "message", "message", "recipients",]
+    form_class = CompleteMailingForm
     template_name = 'mailing_list/mailing_form.html'
     success_url = reverse_lazy('mailinglist:mailing_list')
 
-class MailingDelete(LoginRequiredMixin, DeleteView):
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Передаем пользователя в форму
+        return kwargs
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise Http404("Вы не имеете доступа к этой рассылке")
+        return obj
+
+    # def get_queryset(self):
+    #     return Mailing.objects.filter(
+    #         user=self.request.user,
+    #         status=Mailing.CREATED  # Возможно, добавить фильтрацию по статусу
+    #     )
+
+
+class MailingDelete(BaseMailingView, DeleteView):
     model = Mailing
     template_name = 'mailing_list/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailinglist:mailing_list')
 
-class MailingSend(LoginRequiredMixin, SingleObjectMixin, View):
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise Http404("Вы не имеете доступа к этой рассылке")
+        return obj
+
+
+class MailingSend(BaseMailingView, SingleObjectMixin, View):
     model = Mailing
 
     def post(self, request, *args, **kwargs):
-        # Получаем объект рассылки
         self.object = self.get_object()
         mailing = self.get_object()
 
-        # Получаем сообщение из связанной модели MessageManagement
-        message = mailing.message
+        if mailing.user != self.request.user:
+            raise Http404("Вы не имеете доступа к этой рассылке")
 
-        # Формируем данные для отправки
+        message = mailing.message
         subject = message.message_subject
         body = message.body
         sender_email = settings.DEFAULT_FROM_EMAIL
-
-        # Получаем список получателей
         recipients = [recipient.email for recipient in mailing.recipients.all()]
 
         try:
             # Отправляем сообщение
-            # Получаем ответ от почтового сервера
             response = send_mail(
                 subject,
                 body,
@@ -95,52 +144,79 @@ class MailingSend(LoginRequiredMixin, SingleObjectMixin, View):
             # Создаем попытку отправки
             attempt = AttemptMailing.objects.create(
                 mailing=mailing,
-                status=AttemptMailing.SUCCESS
+                status=AttemptMailing.SUCCESS,
+                user=self.request.user
             )
-            # Сохраняем реальный ответ сервера
-
             attempt.mail_server_response = f"Отправлено {response} писем"
             attempt.save()
 
-            # mailing.status = Mailing.COMPLETED
-            # mailing.save()
-
-            # Показываем сообщение об успехе
             messages.success(request, 'Сообщение успешно отправлено')
-            return HttpResponseRedirect(reverse_lazy('mailing_list:mailing_detail', kwargs={'pk': mailing.pk}))
+            return HttpResponseRedirect(reverse_lazy(
+                'mailing_list:mailing_detail',
+                kwargs={'pk': mailing.pk}
+            ))
 
         except Exception as e:
-            mailing.status = Mailing.STARTED
+            # Обновляем статус в случае ошибки
+            mailing.status = Mailing.FAILED
             mailing.save()
+
             # Создаем запись об ошибке
             attempt = AttemptMailing.objects.create(
                 mailing=mailing,
-                status=AttemptMailing.FAILURE
+                status=AttemptMailing.FAILURE,
+                user=self.request.user
             )
             attempt.mail_server_response = str(e)
             attempt.save()
+
             messages.error(request, f'Ошибка при отправке: {str(e)}')
-            return HttpResponseRedirect(reverse_lazy('mailing_list:mailing_detail', kwargs={'pk': mailing.pk}))
+            return HttpResponseRedirect(reverse_lazy(
+                'mailing_list:mailing_detail',
+                kwargs={'pk': mailing.pk}
+            ))
 
 
-class CompleteMailing(LoginRequiredMixin, View):
+class CompleteMailing(BaseMailingView, View):
     def post(self, request, pk):
-        mailing = Mailing.objects.get(pk=pk)
+        # mailing = Mailing.objects.get(pk=pk)
+        try:
+            # Получаем объект рассылки с проверкой существования
+            mailing = get_object_or_404(Mailing, pk=pk)
 
-        # Проверяем, что рассылка не уже завершена
-        if mailing.status == Mailing.COMPLETED:
-            messages.error(request, 'Рассылка уже завершена')
-            return HttpResponseRedirect(reverse_lazy('mailing_list:mailing_detail', kwargs={'pk': pk}))
+            # Проверяем права доступа
+            if mailing.user != request.user:
+                raise Http404("Рассылка не найдена или у вас нет прав доступа")
 
-        # Меняем статус на завершенный
-        mailing.status = Mailing.COMPLETED
-        mailing.save()
+            # Проверяем текущий статус рассылки
+            if mailing.status == Mailing.COMPLETED:
+                messages.error(request, 'Рассылка уже завершена')
+                return redirect('mailing_list:mailing_detail', pk=pk)
 
-        messages.success(request, 'Рассылка успешно завершена')
-        return HttpResponseRedirect(reverse_lazy('mailing_list:mailing_detail', kwargs={'pk': pk}))
+            # Обновляем статус и время завершения
+            mailing.status = Mailing.COMPLETED
+            mailing.completed_at = timezone.now()
+            mailing.save()
+
+            messages.success(request, 'Рассылка успешно завершена')
+            return redirect('mailing_list:mailing_detail', pk=pk)
+
+        except Mailing.DoesNotExist:
+            raise Http404("Рассылка не найдена")
+        except Exception as e:
+            messages.error(request, f'Произошла ошибка: {str(e)}')
+            return redirect('mailing_list:mailing_detail', pk=pk)
 
 
-class StatsView(View):
+class StatsView(LoginRequiredMixin, View):
+
+    @method_decorator(permission_required('mailing_list.view_mailing_stats', raise_exception=True))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    permission_required = 'mailing_list.view_mailing_stats'
+    login_url = '/login/'
+
     def get(self, request):
         user = request.user
 

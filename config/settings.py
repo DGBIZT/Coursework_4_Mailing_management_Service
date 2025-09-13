@@ -155,3 +155,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 PASSWORD_RESET_EMAIL_TEMPLATE = 'registration/password_reset_email.html'
 PASSWORD_RESET_SUBJECT_TEMPLATE = 'registration/password_reset_subject.txt'
 
+
+default_app_config = 'mailing_list.apps.MailingListConfig'

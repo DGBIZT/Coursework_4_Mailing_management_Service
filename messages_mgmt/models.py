@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-User = get_user_model()
+from users.models import CustomUser
 
 
 class MessageManagement(models.Model):
@@ -17,7 +17,7 @@ class MessageManagement(models.Model):
     )
 
     user = models.ForeignKey(
-        User,
+        CustomUser,
         verbose_name="Пользователь",
         on_delete=models.CASCADE,
         related_name='messages'

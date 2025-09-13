@@ -26,6 +26,7 @@ class MailingRecipientFrom(forms.ModelForm):
         fields = ["email", "full_name", "comment"]
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
         self.fields['email'].widget.attrs.update({
@@ -54,8 +55,11 @@ class MailingRecipientFrom(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         validate_forbidden_words(email)
-        allowed_domains = ('@gmail.com', '@sky.pro', '@yandex.ru', '@mail.com')
-        if not email.endswith(allowed_domains):
+        # if MailingRecipient.objects.filter(email=email, user=self.user).exists():
+        #     raise ValidationError("Получатель с таким email уже существует")
+
+        allowed_domains = ('@gmail.com', '@sky.pro', '@yandex.ru', '@mail.ru')
+        if not any(email.endswith(domain) for domain in allowed_domains):
             raise ValidationError("Email должен оканчиваться на @gmail.com, @yandex.ru, @mail.ru или @sky.pro")
         return email
 

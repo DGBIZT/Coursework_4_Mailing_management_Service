@@ -7,7 +7,7 @@ class MailingAdmin(admin.ModelAdmin):
     # создаем метод для отображения получателей
 
     def get_recipients(self, obj):
-        return ", ".join([recipient.name for recipient in obj.recipients.all()])
+        return ", ".join([recipient.email for recipient in obj.recipients.all()])
 
     get_recipients.short_description = "Получатели"
 

@@ -1,11 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import EmailValidator
+from users.models import CustomUser
 
 class MailingRecipient(models.Model):
     email = models.EmailField(
         max_length=254,
-        unique=True,
         validators=[EmailValidator()],
         verbose_name='E-Mail Address'
     )
@@ -18,7 +18,13 @@ class MailingRecipient(models.Model):
         null=True,
         verbose_name='Комментарий'
     )
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='mailing_recipients'
+    )
     class Meta:
+        # unique_together = ('email', 'user')
         verbose_name = "Получатель рассылки"
         verbose_name_plural = "Получатели рассылок"
         ordering = ['email']
