@@ -14,10 +14,7 @@ from django.utils import timezone
 from django.http import Http404
 from .forms import MessageManagementForm
 from django.core.cache import cache
-from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
-
 
 
 class BaseMessageManagementView(LoginRequiredMixin):
@@ -40,7 +37,6 @@ class MessageManagementCreateView(BaseMessageManagementView, CreateView):
     form_class = MessageManagementForm
     template_name = 'messages_mgmt/messagemgmt_form.html'
     success_url = reverse_lazy('messagesmgmt:messagemgmt_list')
-
 
     # def form_valid(self, form):
     #     form.instance.user = self.request.user
@@ -66,6 +62,7 @@ class MessageManagementCreateView(BaseMessageManagementView, CreateView):
         context['action'] = 'Создать'
         return context
 
+
 @method_decorator(cache_page(60 * 5), name='dispatch')
 class MessageManagementListView(BaseMessageManagementView, ListView):
     model = MessageManagement
@@ -76,6 +73,7 @@ class MessageManagementListView(BaseMessageManagementView, ListView):
         context = super().get_context_data(**kwargs)
         context['total_messages'] = self.get_queryset().count()
         return context
+
 
 @method_decorator(cache_page(60 * 5), name='dispatch')
 class MessageManagementDetailView(BaseMessageManagementView, DetailView):
@@ -88,6 +86,7 @@ class MessageManagementDetailView(BaseMessageManagementView, DetailView):
         if obj.user != self.request.user:
             raise Http404("У вас нет прав доступа к этому сообщению")
         return obj
+
 
 class MessageManagementUpdateView(BaseMessageManagementView, UpdateView):
     model = MessageManagement
@@ -112,6 +111,7 @@ class MessageManagementUpdateView(BaseMessageManagementView, UpdateView):
         user = self.request.user
         cache.delete(f'messagemanagement_queryset_{user.id}')
         return response
+
 
 class MessageManagementDeleteView(BaseMessageManagementView, DeleteView):
     model = MessageManagement

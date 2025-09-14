@@ -16,12 +16,12 @@ class Command(BaseCommand):
         # Создаём пользователя
         user = User.objects.create(
             email=email,
-            username=email,  # Обязательно, так как AbstractUser требует username
+            username=email,   # Обязательно, так как AbstractUser требует username
             first_name='Admin',
             last_name='Admin',
             is_staff=True,
             is_superuser=True,
-            is_confirmed=True,  #  Подтверждаем сразу!
+            is_confirmed=True,   # Подтверждаем сразу!
         )
         user.set_password('1234')
         user.save()
@@ -39,8 +39,8 @@ class Command(BaseCommand):
             self.style.SUCCESS(f'Администратор успешно создан: {user.email}')
         )
         self.stdout.write(
-            self.style.SUCCESS(f'is_confirmed = True установлен')
+            self.style.SUCCESS('is_confirmed = True установлен')
         )
         self.stdout.write(
-            self.style.SUCCESS(f'Получатель рассылки добавлен (если не существовал)')
+            self.style.SUCCESS('Получатель рассылки добавлен (если не существовал)')
         )

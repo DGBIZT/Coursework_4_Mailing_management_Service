@@ -5,10 +5,12 @@ from .models import MailingRecipient
 
 # Список запрещённых слов
 FORBIDDEN_WORDS = {
-    'admin', 'administrator', 'root', 'support', 'help',  "спам", 'casino', 'sex', 'info', 'webmaster',
+    'admin', 'administrator', 'root', 'support', 'help', "спам", 'casino', 'sex', 'info', 'webmaster',
     'moderator', 'owner', 'fckyou', 'btch', 'bestshop', 'freemoney', 'casino777', 'sexchat', 'aaaaaaaaaa',
     '11111111', 'qwertyuiop',
 }
+
+
 def validate_forbidden_words(value):
     """
     Проверяет, что текст не содержит запрещённых слов.

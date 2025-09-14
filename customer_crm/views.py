@@ -15,7 +15,6 @@ from django.utils.decorators import method_decorator
 from django.core.cache import cache
 
 
-
 class BaseCustomerCRMView(LoginRequiredMixin):
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
@@ -36,6 +35,7 @@ class MailingRecipientCreateView(BaseCustomerCRMView, CreateView):
         form.instance.user = self.request.user  # Устанавливаем связь с пользователем
         return super().form_valid(form)
 
+
 @method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingRecipientListView(BaseCustomerCRMView, ListView):
     model = MailingRecipient
@@ -50,11 +50,13 @@ class MailingRecipientListView(BaseCustomerCRMView, ListView):
         context['form'] = MailingRecipientFrom(user=self.request.user)
         return context
 
+
 @method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingRecipientDetailView(BaseCustomerCRMView,DetailView):
     model = MailingRecipient
     template_name = 'customer_crm/mailingrecipient_detail.html'
     context_object_name = 'mailingrecipient'
+
 
 class MailingRecipientUpdateView(BaseCustomerCRMView, UpdateView):
     model = MailingRecipient
@@ -77,6 +79,7 @@ class MailingRecipientUpdateView(BaseCustomerCRMView, UpdateView):
         if form.instance.user != self.request.user:
             return HttpResponseForbidden("Доступ запрещен")
         return super().form_valid(form)
+
 
 class MailingRecipientDeleteView(BaseCustomerCRMView, DeleteView):
     model = MailingRecipient
@@ -136,4 +139,3 @@ class HomeView(BaseCustomerCRMView, TemplateView):
         context['recent_mailings'] = recent_mailings
 
         return context
-

@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from customer_crm.models import MailingRecipient
 
+
 class Command(BaseCommand):
     help = ("Добавление получателей рассылки через командную строку. Пример: python manage.py add_recipients")
 
@@ -18,8 +19,8 @@ class Command(BaseCommand):
 
         for data in recipient_data:
             recipient, created = MailingRecipient.objects.get_or_create(
-                email=data["email"], # Уникальный ключ — email
-                defaults={ # Эти поля будут использованы ТОЛЬКО при создании
+                email=data["email"],  # Уникальный ключ — email
+                defaults={  # Эти поля будут использованы ТОЛЬКО при создании
                     "full_name": data["full_name"],
                     "comment": data["comment"]
                 }

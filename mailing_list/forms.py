@@ -4,12 +4,13 @@ from django.utils.translation import gettext_lazy as _
 from .models import Mailing, MailingRecipient
 from messages_mgmt.models import MessageManagement
 
+
 class CompleteMailingForm(forms.ModelForm):
     message = forms.ModelChoiceField(
         queryset=MessageManagement.objects.none(),
         empty_label="Выберите сообщение",
         widget=forms.Select(attrs={'class': 'form-control'}),
-        to_field_name = 'id',
+        to_field_name='id',
     )
 
     class Meta:
@@ -33,7 +34,6 @@ class CompleteMailingForm(forms.ModelForm):
         if not self.fields['message'].queryset.exists():
             print("Сообщения не найдены для пользователя:", user)
             print("Все сообщения:", MessageManagement.objects.all())
-
 
     def clean_recipients(self):
         recipients = self.cleaned_data.get('recipients')

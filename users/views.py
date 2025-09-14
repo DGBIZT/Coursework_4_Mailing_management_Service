@@ -1,10 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.views import (PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetConfirmView,
-    PasswordResetCompleteView
-)
+from django.contrib.auth.views import (PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView)
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import FormView
@@ -45,7 +41,6 @@ class RegisterView(FormView):
 
     def generate_confirmation_link(self, user):
         return f"{settings.FRONTEND_URL}/users/confirm/{user.confirmation_token}/"
-
 
 
 def confirm_email(request, token):
@@ -94,6 +89,7 @@ def user_login(request):
 
     return render(request, 'login.html', {'form': form})
 
+
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     template_name = 'registration/password_reset_form.html'
@@ -101,12 +97,15 @@ class CustomPasswordResetView(PasswordResetView):
     subject_template_name = 'registration/password_reset_subject.txt'
     success_url = reverse_lazy('users:password_reset_done')
 
+
 class PasswordResetDoneView(PasswordResetDoneView):
     template_name = 'registration/password_reset_done.html'
+
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'registration/password_reset_confirm.html'
     success_url = reverse_lazy('users:password_reset_complete')
+
 
 class PasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'registration/password_reset_complete.html'

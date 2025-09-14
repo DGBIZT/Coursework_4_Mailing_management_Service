@@ -6,10 +6,10 @@ from customer_crm.models import MailingRecipient
 from datetime import timedelta
 from users.models import CustomUser
 
+
 class Mailing(models.Model):
 
-    #Временные параметры
-    start_datetime = models.DateTimeField(
+    start_datetime = models.DateTimeField(  # Временные параметры
         verbose_name="Дата и время первой отправки",
         default=timezone.now
     )
@@ -38,7 +38,7 @@ class Mailing(models.Model):
 
     # Связь с сообщением
     message = models.ForeignKey(
-        MessageManagement, # модель, с которой устанавливается связь
+        MessageManagement,  # модель, с которой устанавливается связь
         verbose_name='Сообщение',
         on_delete=models.CASCADE,
         related_name='related_mailings',
@@ -46,7 +46,7 @@ class Mailing(models.Model):
 
     # Связь с получателями
     recipients = models.ManyToManyField(
-        MailingRecipient, # модель, с которой устанавливается связь
+        MailingRecipient,   # модель, с которой устанавливается связь
         verbose_name='Получатели',
         related_name='recipient_mailings',
     )
@@ -63,16 +63,16 @@ class Mailing(models.Model):
         default=True
     )
 
-
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
-        ordering = ['-start_datetime'] # порядок сортировки объектов по умолчанию, ‘-’ перед полем означает сортировку по убыванию
-                                       # В данном случае объекты будут сортироваться по полю start_datetime от новых к старым
+        ordering = ['-start_datetime']  # порядок сортировки объектов по умолчанию,
+        # ‘-’ перед полем означает сортировку по убыванию
+        # В данном случае объекты будут сортироваться по полю
+        # start_datetime от новых к старым
         permissions = [
             ('disable_mailing', 'Can disable mailing'),
         ]
-
 
 
 class AttemptMailing(models.Model):

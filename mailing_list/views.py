@@ -14,14 +14,14 @@ from django.http import HttpResponseRedirect, Http404
 from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.views import View
 from .models import MessageManagement, Mailing, AttemptMailing
 
 User = get_user_model()
+
 
 class BaseMailingView(LoginRequiredMixin):
     def get_queryset(self):
@@ -34,6 +34,7 @@ class BaseMailingView(LoginRequiredMixin):
             cache.set(cache_key, queryset, timeout=3600)  # Кешируем на 1 час
 
         return queryset
+
 
 @method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingList(BaseMailingView, ListView):
@@ -48,6 +49,7 @@ class MailingList(BaseMailingView, ListView):
         context = super().get_context_data(**kwargs)
         # context['mailings_list'] = Mailing.objects.all()  # Явное указание queryset
         return context
+
 
 class MailingCreate(BaseMailingView, CreateView):
     model = Mailing
@@ -83,6 +85,7 @@ class MailingCreate(BaseMailingView, CreateView):
         context['all_messages'] = MessageManagement.objects.filter(user=self.request.user)
         return context
 
+
 @method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingDetail(BaseMailingView, DetailView):
     model = Mailing
@@ -96,6 +99,7 @@ class MailingDetail(BaseMailingView, DetailView):
             mailing__user=self.request.user
         )
         return context
+
 
 class MailingUpdate(BaseMailingView, UpdateView):
     model = Mailing
@@ -272,7 +276,6 @@ class CompleteMailing(BaseMailingView, View):
             return redirect('mailing_list:mailing_detail', pk=pk)
 
 
-
 class StatsView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'mailing_list.view_mailing_stats'
     login_url = '/login/'
@@ -288,7 +291,6 @@ class StatsView(LoginRequiredMixin, PermissionRequiredMixin, View):
             pass
 
         return super().dispatch(request, *args, **kwargs)
-
 
     def get(self, request):
         user = request.user
@@ -340,8 +342,8 @@ class StatsView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'stats': stats,
             'recent_attempts': recent_attempts,
             'success_rate': (
-                stats['success_attempts'] /
-                stats['total_attempts'] * 100
+                stats['success_attempts']
+                / stats['total_attempts'] * 100
                 if stats['total_attempts'] > 0 else 0
             ),
             'is_manager': is_manager,

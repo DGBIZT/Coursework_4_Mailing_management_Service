@@ -11,7 +11,7 @@ class MessageManagement(models.Model):
     message_subject = models.CharField(
         max_length=255,
         verbose_name="Тема письма",
-        help_text = "Краткий заголовок письма, отображается в поле «Тема» у получателя."
+        help_text="Краткий заголовок письма, отображается в поле «Тема» у получателя."
     )
 
     body = models.TextField(
@@ -45,9 +45,11 @@ class MessageManagement(models.Model):
     def __str__(self):
         return self.message_subject
 
+
 @receiver(post_save, sender=MessageManagement)
 def clear_cache_on_save(sender, instance, **kwargs):
     cache.delete(f'messagemanagement_queryset_{instance.user.id}')
+
 
 @receiver(post_delete, sender=MessageManagement)
 def clear_cache_on_delete(sender, instance, **kwargs):

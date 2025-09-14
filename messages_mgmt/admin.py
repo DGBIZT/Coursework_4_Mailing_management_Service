@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import MessageManagement
 
+
 @admin.register(MessageManagement)
 class MessageManagement(admin.ModelAdmin):
     list_display = ('message_subject', 'body',)

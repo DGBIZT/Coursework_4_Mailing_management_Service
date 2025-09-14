@@ -5,6 +5,7 @@ from .models import CustomUser
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import get_user_model
 
+
 class CustomUserCreationForm(UserCreationForm):
     phone_number = forms.CharField(
         max_length=15,
@@ -64,6 +65,7 @@ class CustomUserCreationForm(UserCreationForm):
         if phone_number and not phone_number.isdigit():
             raise ValidationError('Номер телефона должен содержать только цифры.')
         return phone_number
+
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
