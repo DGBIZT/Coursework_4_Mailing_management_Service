@@ -10,12 +10,16 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.http import HttpResponseForbidden
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.core.cache import cache
 
 
 
 class BaseCustomerCRMView(LoginRequiredMixin):
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
+
 
 class MailingRecipientCreateView(BaseCustomerCRMView, CreateView):
     model = MailingRecipient
@@ -32,6 +36,7 @@ class MailingRecipientCreateView(BaseCustomerCRMView, CreateView):
         form.instance.user = self.request.user  # Устанавливаем связь с пользователем
         return super().form_valid(form)
 
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingRecipientListView(BaseCustomerCRMView, ListView):
     model = MailingRecipient
     template_name = 'customer_crm/mailingrecipient_list.html'
@@ -45,6 +50,7 @@ class MailingRecipientListView(BaseCustomerCRMView, ListView):
         context['form'] = MailingRecipientFrom(user=self.request.user)
         return context
 
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class MailingRecipientDetailView(BaseCustomerCRMView,DetailView):
     model = MailingRecipient
     template_name = 'customer_crm/mailingrecipient_detail.html'
@@ -92,6 +98,10 @@ class MailingRecipientDeleteView(BaseCustomerCRMView, DeleteView):
 
 class HomeView(BaseCustomerCRMView, TemplateView):
     template_name = 'customer_crm/home.html'
+
+    # @method_decorator(cache_page(60 * 5))  # Кеширование на 5 минут
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
