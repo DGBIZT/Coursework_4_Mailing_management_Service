@@ -11,7 +11,7 @@ class Command(BaseCommand):
                 'view_mailing',  # просмотр рассылок
                 'view_customuser',  # просмотр списка пользователей
                 'block_user',  # блокировка пользователей
-                'disable_mailing'  # отключение рассылок
+                'disable_mailing',  # отключение рассылок
             ]
         )
         group.permissions.set(permissions)

@@ -1,0 +1,9 @@
+{% extends 'customer_crm/base.html' %}
+{% block content %}
+<h1>Отключить рассылку</h1>
+<form method="post">
+    {% csrf_token %}
+    <p>Вы уверены, что хотите отключить рассылку?</p>
+    <button type="submit" class="btn btn-danger">Отключить</button>
+</form>
+{% endblock %}

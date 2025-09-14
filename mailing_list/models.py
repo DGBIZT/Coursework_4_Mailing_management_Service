@@ -58,12 +58,21 @@ class Mailing(models.Model):
         related_name='created_mailings'
     )
 
+    is_active = models.BooleanField(
+        verbose_name="Активна",
+        default=True
+    )
+
 
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         ordering = ['-start_datetime'] # порядок сортировки объектов по умолчанию, ‘-’ перед полем означает сортировку по убыванию
                                        # В данном случае объекты будут сортироваться по полю start_datetime от новых к старым
+        permissions = [
+            ('disable_mailing', 'Can disable mailing'),
+        ]
+
 
 
 class AttemptMailing(models.Model):
@@ -139,6 +148,7 @@ class AttemptMailing(models.Model):
         ordering = ['-time_attempt']
         permissions = [
             ('view_mailing_stats', 'view mailing stats'),
+
         ]
 
     def __str__(self):

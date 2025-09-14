@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from .models import CustomUser
 from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth import get_user_model
 
 class CustomUserCreationForm(UserCreationForm):
     phone_number = forms.CharField(
@@ -93,6 +94,7 @@ class CustomAuthenticationForm(AuthenticationForm):
                 raise ValidationError("Пользователь не найден")
         return self.cleaned_data
 
+
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
@@ -104,6 +106,19 @@ class CustomPasswordResetForm(PasswordResetForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if not CustomUser.objects.filter(email=email).exists():
+        User = get_user_model()
+
+        # Проверяем существование пользователя
+        if not User.objects.filter(email=email).exists():
             raise ValidationError("Пользователь с таким email не найден")
+
+        # Проверяем, что пользователь не заблокирован
+        if User.objects.filter(email=email, is_blocked=True).exists():
+            raise ValidationError("Пользователь заблокирован")
+
         return email
+
+    def get_users(self, email):
+        """Переопределяем метод для игнорирования is_active"""
+        User = get_user_model()
+        return User.objects.filter(email__iexact=email, is_blocked=False)

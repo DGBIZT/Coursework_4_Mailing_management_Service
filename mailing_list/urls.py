@@ -13,4 +13,5 @@ urlpatterns = [
 
     path('mailing/<int:pk>/send/', views.MailingSend.as_view(), name='mailing_send'),
     path('mailing/complete/<int:pk>/', views.CompleteMailing.as_view(), name='mailing_complete'),
+    path('disable/<int:mailing_id>/', views.DisableMailingView.as_view(), name='disable_mailing'),
 ]
