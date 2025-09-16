@@ -7,8 +7,8 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm">
-                <div class="card-header text-center">
-                    <h3>Редактирование профиля</h3>
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="card-title">Редактирование пользователя</h3>
                 </div>
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
@@ -23,33 +23,7 @@
                             {% endif %}
                         </div>
 
-                        <!-- Поле для загрузки аватара -->
-                        <div class="form-group mb-3">
-                            {{ form.avatar.label_tag }}
-                            {{ form.avatar }}
-                            {% if form.avatar.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.avatar.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Поле для редактирования имени пользователя -->
-                        <div class="form-group mb-3">
-                            {{ form.username.label_tag }}
-                            <input type="text" name="{{ form.username.name }}" class="form-control" value="{{ user.username }}" placeholder="Имя пользователя">
-                            {% if form.username.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.username.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Поле для редактирования email -->
+                        <!-- Секция редактирования персональных данных -->
                         <div class="form-group mb-3">
                             {{ form.email.label_tag }}
                             <input type="email" name="{{ form.email.name }}" class="form-control" value="{{ user.email }}" placeholder="Email">
@@ -62,7 +36,18 @@
                             {% endif %}
                         </div>
 
-                        <!-- Поле для редактирования имени -->
+                        <div class="form-group mb-3">
+                            {{ form.username.label_tag }}
+                            <input type="text" name="{{ form.username.name }}" class="form-control" value="{{ user.username }}" placeholder="Имя пользователя">
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
                         <div class="form-group mb-3">
                             {{ form.first_name.label_tag }}
                             <input type="text" name="{{ form.first_name.name }}" class="form-control" value="{{ user.first_name }}" placeholder="Имя">
@@ -75,7 +60,6 @@
                             {% endif %}
                         </div>
 
-                        <!-- Поле для редактирования фамилии -->
                         <div class="form-group mb-3">
                             {{ form.last_name.label_tag }}
                             <input type="text" name="{{ form.last_name.name }}" class="form-control" value="{{ user.last_name }}" placeholder="Фамилия">
@@ -87,7 +71,8 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <!-- Поле для редактирования телефона -->
+
+                        <!-- Секция контактной информации -->
                         <div class="form-group mb-3">
                             {{ form.phone_number.label_tag }}
                             <input type="text" name="{{ form.phone_number.name }}" class="form-control" value="{{ user.phone_number }}" placeholder="Телефон">
@@ -100,7 +85,20 @@
                             {% endif %}
                         </div>
 
-                        <!-- Поле для изменения пароля -->
+                        <!-- Секция загрузки аватара -->
+                        <div class="form-group mb-3">
+                            {{ form.avatar.label_tag }}
+                            {{ form.avatar }}
+                            {% if form.avatar.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.avatar.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Секция смены пароля -->
                         <div class="form-group mb-3">
                             {{ form.password1.label_tag }}
                             <input type="password" name="{{ form.password1.name }}" class="form-control" placeholder="Новый пароль">
@@ -125,12 +123,24 @@
                             {% endif %}
                         </div>
 
+                        <!-- Дополнительные поля профиля (опционально) -->
+                        <div class="form-group mb-3">
+                            {{ form.bio.label_tag }}
+                            <textarea name="{{ form.bio.name }}" class="form-control" placeholder="О себе">{{ user.bio }}</textarea>
+                            {% if form.bio.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.bio.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
                         <!-- Кнопки управления формой -->
                         <div class="d-flex justify-content-end mt-4">
-    <button type="submit" class="btn btn-primary mx-2">Сохранить изменения</button>
-    <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary mx-2">Отмена</a>
-</div>
-
+                            <button type="submit" class="btn btn-primary mx-2">Сохранить изменения</button>
+                            <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary mx-2">Отмена</a>
+                        </div>
 
                     </form>
                 </div>
@@ -140,4 +150,3 @@
 </div>
 
 {% endblock %}
-

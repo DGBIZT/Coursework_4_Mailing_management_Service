@@ -30,9 +30,6 @@ class MailingRecipient(models.Model):
         verbose_name = "Получатель рассылки"
         verbose_name_plural = "Получатели рассылок"
         ordering = ['email']
-        # permissions = [
-        #     ('view_mailingrecipient', 'Can view mailing recipients'),  # просмотр клиентов
-        # ]
 
 
     def __str__(self):
