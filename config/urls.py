@@ -19,8 +19,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/customer_crm/home/', permanent=False), name='root-redirect'),
     path("admin/", admin.site.urls),
     path('customer_crm/', include('customer_crm.urls', namespace='customercrm')),
     path('messages_mgmt/', include('messages_mgmt.urls', namespace='messagesmgmt')),

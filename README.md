@@ -121,9 +121,8 @@
             WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
             For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
         
-        Нажмите на http://127.0.0.1:8000/ и у вас откроется браузер или скопируйте и всавте в адресную строку. 
-        Добавьте после /customer_crm/home/. В адресной строке у вас должно получиться http://127.0.0.1:8000/customer_crm/home/ и нажимайте Enter
-        
+        Нажмите на http://127.0.0.1:8000/ и у вас откроется браузер на главной странице приложения. В адресной строке вы увидите http://127.0.0.1:8000/customer_crm/home/ 
+       
         Приятного пользования приложением!
 ```
 
