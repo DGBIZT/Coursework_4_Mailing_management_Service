@@ -21,17 +21,21 @@
                 <div class="ms-auto d-flex flex-wrap">
 
                     {% if user.is_authenticated %}
-                        <b class="p-2 me-2 " style="color: #0d6efd;">Добро пожаловать {{ user.username }} !</b>
-                        <form method="post" action="{% url 'users:logout' %}" style="display: inline">
-                    {% csrf_token %}
-                            <button type="submit" class="p-2 btn btn-outline-primary me-2">Выйти</button>
+                        <a href="{% url 'users:profile' %}" class="hederlink">
+                        {{ user.username }} !
+                        </a>
+
+                        <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="p-2 btn btn-outline-primary me-2">Выйти</button>
                         </form>
-                    {% else %}
-                        <b class="p-2 me-2" style="color: #0d6efd;">Добро пожаловать на сайт !</b>
+                        {% else %}
+                        <!-- <b class="p-2 me-2" style="color: #0d6efd;">Добро пожаловать на сайт !</b> -->
                         <a class="p-2 btn btn-outline-primary me-2" href="{% url 'users:login' %}">Войти</a>
                         <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
                     {% endif %}
-    </div>
+
+                </div>
             </div>
         </div>
     </nav>

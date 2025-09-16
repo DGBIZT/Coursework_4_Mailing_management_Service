@@ -147,7 +147,12 @@ class AttemptMailing(models.Model):
         verbose_name_plural = "Попытки рассылки"
         ordering = ['-time_attempt']
         permissions = [
-            ('view_mailing_stats', 'view mailing stats'),
+            ('view_mailing_stats', 'view mailing stats'), # просмотр статистики
+            ('disable_mailing', 'Can disable mailing'),  # существующее право
+            ('view_mailing', 'Can view mailing'),  # просмотр рассылок
+            ('view_mailingrecipient', 'Can view mailing recipients'),  # просмотр клиентов
+            ('view_customuser', 'Can view users'),  # просмотр списка пользователей
+            ('block_user', 'Can block users'),  # блокировка пользователей
 
         ]
 

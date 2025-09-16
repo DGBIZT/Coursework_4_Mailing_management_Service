@@ -6,18 +6,31 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
-    help = "Добавление сообщений через командную строку. Пример: python manage.py add_messages"
+    help = "Добавление сообщений через командную строку. Пример: python manage.py add_messages. ВНИМАНИЕ с начала создайте пользователя python manage.py createadmin"
 
     def handle(self, *args, **options):
 
-        # Находим пользователя, например, первого суперпользователя
-        user = User.objects.filter(is_superuser=True).first()
-        if not user:
-            self.stdout.write(
-                self.style.ERROR(
-                    "Не найдено ни одного суперпользователя. Сначала создайте его через createsuperuser.")
-            )
-            return
+        try:
+            # Пытаемся найти пользователя testadmin@sky.pro
+            target_user = User.objects.get(username='testadmin@sky.pro')
+        except User.DoesNotExist:
+            try:
+                # Если не нашли по username, пробуем найти по email
+                target_user = User.objects.get(email='testadmin@sky.pro')
+            except User.DoesNotExist:
+                self.stdout.write(
+                    self.style.ERROR("Пользователь testadmin@sky.pro не найден в системе!")
+                )
+                return
+
+        # # Находим пользователя, например, первого суперпользователя
+        # user = User.objects.filter(is_superuser=True).first()
+        # if not user:
+        #     self.stdout.write(
+        #         self.style.ERROR(
+        #             "Не найдено ни одного суперпользователя. Сначала создайте его через createsuperuser.")
+        #     )
+        #     return
 
         message_data = [
             {"message_subject": "ТВ под любой сценарий жизни", "body": "Готовьте, играйте или устраивайте киновечера — телевизоры "
@@ -37,7 +50,7 @@ class Command(BaseCommand):
                 message_subject=data["message_subject"],    # Уникальный ключ — message_subject
                 defaults={      # Эти поля будут использованы ТОЛЬКО при создании
                     "body": data["body"],
-                    "user": user,
+                    "user": target_user, # Привязываемся к пользователю testadmin@sky.pro
                 }
             )
 

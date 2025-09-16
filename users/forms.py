@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 from .models import CustomUser
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserChangeForm
+
+
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -124,3 +127,11 @@ class CustomPasswordResetForm(PasswordResetForm):
         """Переопределяем метод для игнорирования is_active"""
         User = get_user_model()
         return User.objects.filter(email__iexact=email, is_blocked=False)
+
+class ProfileUpdateForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'phone_number', 'avatar']
+        widgets = {
+            'avatar': forms.ClearableFileInput(attrs={'multiple': False}),
+        }

@@ -13,6 +13,11 @@ import uuid
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import ProfileUpdateForm
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import UpdateView
 
 
 class RegisterView(FormView):
@@ -110,3 +115,26 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 class PasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'registration/password_reset_complete.html'
 
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    form_class = ProfileUpdateForm
+    template_name = 'profile_update.html'
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Профиль успешно обновлен')
+        return response
