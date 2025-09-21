@@ -1,0 +1,3 @@
+Правильный синтаксис запуска команды
+
+python manage.py send_newsletter --subject="Новость дня" --message="прекрасная погода" --recipients="1,2"

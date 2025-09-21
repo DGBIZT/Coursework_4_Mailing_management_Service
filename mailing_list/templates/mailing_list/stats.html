@@ -1,0 +1,86 @@
+{% extends 'customer_crm/base.html' %}
+{% block title %}Статистика рассылок{% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 class="mb-4">Статистика рассылок</h1>
+
+    {% if no_data %}
+        <div class="alert alert-info mb-4">
+            У вас пока нет рассылок. Создайте первую рассылку, чтобы увидеть статистику.
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stats-summary">
+                            <h2 class="mb-3">Общая статистика</h2>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="stat-item bg-light p-3 rounded">
+                                        <span class="label fw-bold">Всего попыток:</span>
+                                        <span class="value fs-4">{{ stats.total_attempts }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="stat-item bg-light p-3 rounded">
+                                        <span class="label fw-bold">Успешных:</span>
+                                        <span class="value fs-4 text-success">{{ stats.success_attempts }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="stat-item bg-light p-3 rounded">
+                                        <span class="label fw-bold">Неуспешных:</span>
+                                        <span class="value fs-4 text-danger">{{ stats.failed_attempts }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="stat-item bg-light p-3 rounded">
+                                        <span class="label fw-bold">Успешность:</span>
+                                        <span class="value fs-4">{{ success_rate }}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                Последние попытки
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Дата</th>
+                                            <th>Статус</th>
+                                            <th>Ответ сервера</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for attempt in recent_attempts %}
+                                        <tr>
+                                            <td>{{ attempt.time_attempt }}</td>
+                                            <td>
+                                                {% if attempt.status == AttemptMailing.SUCCESS %}
+                                                    <span class="text-success">Успешно</span>
+                                                {% elif attempt.status == AttemptMailing.FAILURE %}
+                                                    <span class="text-danger">Ошибка</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ attempt.mail_server_response }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
